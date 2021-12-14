@@ -4,14 +4,15 @@ Created on Wed Sep 15 18:29:08 2021
 
 @author: richa
 """
-
-from typing import List, Protocol
 from dataclasses import dataclass
+from typing import List
+from typing import Protocol
 
 import music21
 
 @dataclass
 class BaseMusicHandler(Protocol):
+    """Base music handler class. Template: already implements the parse method"""
 
     part: music21.stream.Part = None
     notes: list = None
@@ -27,6 +28,8 @@ class BaseMusicHandler(Protocol):
         """Generates music21.stream.Score from a list of note names"""
 
 class SimpleMusicHandler(BaseMusicHandler):
+    """Music handler that writes a stream of notes as 16th to a midi file"""
+
     def generate_score(self, note_names: List[str]) -> music21.stream.Score:
         """Generates a new music21.stream.Score from a list of note names.
         All notes are 16th notes.
@@ -38,6 +41,10 @@ class SimpleMusicHandler(BaseMusicHandler):
         return score
 
 class CopyMusicHandler(BaseMusicHandler):
+    """Music handler that copies the rhythms from the input midi and applies it
+    to the score generated with the output notes.
+    """
+
     def generate_score(self, note_names: List[str]):
         """Returns the score that was read in using the parse method, with all
         notes replaced by the specified note names.

@@ -4,15 +4,16 @@ Created on Tue Sep 14 17:00:02 2021
 
 @author: Korean_Crimson
 """
-
 import time
 
-from src.manager import ModelManager
-from src.encoder import Encoder, Quantizer
+from src.encoder import Encoder
+from src.encoder import Quantizer
 from src.judge import Judge
-from src.output_handler import OutputHandler
+from src.manager import ModelManager
 from src.music_handler import CopyMusicHandler
+from src.output_handler import OutputHandler
 
+#pylint: disable=too-many-locals
 def main():
     """Main function"""
     input_file = '../data/988-v02.mid'
@@ -27,7 +28,7 @@ def main():
 
     encoder = Encoder()
     encoded_inputs = encoder.encode(note_names)
-    
+
     quantizer = Quantizer()
     quantizer.setup(encoded_inputs)
 

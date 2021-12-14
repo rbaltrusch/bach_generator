@@ -4,10 +4,9 @@ Created on Wed Sep 15 18:04:19 2021
 
 @author: richa
 """
-
+import datetime
 import os
 import shutil
-import datetime
 
 import music21
 
@@ -24,6 +23,7 @@ class OutputHandler:
             os.makedirs(self.directory)
 
     def copy_files(self, *filepaths):
+        """Copies all filepaths to the output handler directory"""
         for filepath in filepaths:
             destination_path = os.path.join(self.directory, os.path.basename(filepath))
             shutil.copyfile(filepath, destination_path)
