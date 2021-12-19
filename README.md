@@ -1,3 +1,5 @@
+[![License: MIT](https://img.shields.io/badge/License-MIT-purple.svg)](https://opensource.org/licenses/MIT)
+
 # Bach music generator
 
 A Bach music generator using a neural network trained using a genetic algorithm.
