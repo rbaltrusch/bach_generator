@@ -35,6 +35,10 @@ Finally, the output values are received, decoded from numbers into notes and wri
 
 Currently the node decoding happens using a simple frequency ranking analogue to the input note frequency. The rhythms in the input midi file are retained in the output.
 
+## Training data
+
+Training data was downloaded from [www.jsbach.net](http://www.jsbach.net/midi/) and is not included in this repository.
+
 ## Status quo
 
 I want machine learning!
