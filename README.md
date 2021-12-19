@@ -11,13 +11,15 @@ The neural network was setup and trained from scratch. The main motivation behin
 It's obviously not very efficient, because it is not optimized for speed and doesn't use the GPU (so if you want to run this, I hope you have a fast CPU), but this doesn't matter,
 as speed is not within the scope of this experiment.
 
-## Status quo
+## Getting started
 
-I want machine learning!
+To get a copy of this repository, simply open up git bash in an empty folder and use the command:
 
-We have machine learning at home...
+    $ git clone https://github.com/rbaltrusch/bach_generator
 
-Machine learning at home: this
+To install all python dependencies, run the following in your command line:
+
+    python -m pip install -r requirements.txt
 
 ## Algorithm
 
@@ -33,15 +35,13 @@ Finally, the output values are received, decoded from numbers into notes and wri
 
 Currently the node decoding happens using a simple frequency ranking analogue to the input note frequency. The rhythms in the input midi file are retained in the output.
 
-## Getting started
+## Status quo
 
-To get a copy of this repository, simply open up git bash in an empty folder and use the command:
+I want machine learning!
 
-    $ git clone https://github.com/rbaltrusch/bach_generator
+We have machine learning at home...
 
-To install all python dependencies, run the following in your command line:
-
-    python -m pip install -r requirements.txt
+Machine learning at home: this
 
 ## Contributions
 
