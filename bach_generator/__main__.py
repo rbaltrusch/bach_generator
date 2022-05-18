@@ -6,22 +6,22 @@ Created on Tue Sep 14 17:00:02 2021
 """
 import time
 
-from src.encoder import Encoder, Quantizer
-from src.judge import Judge
-from src.manager import ModelManager
-from src.music_handler import CopyMusicHandler
-from src.output_handler import OutputHandler
+from bach_generator.src.encoder import Encoder, Quantizer
+from bach_generator.src.judge import Judge
+from bach_generator.src.manager import ModelManager
+from bach_generator.src.music_handler import CopyMusicHandler
+from bach_generator.src.output_handler import OutputHandler
 
 
 # pylint: disable=too-many-locals
 def main():
     """Main function"""
-    input_file = "../data/988-v02.mid"
+    input_file = "data/988-v02.mid"
     judge = Judge()
 
     output_handler = OutputHandler()
-    output_handler.setup_output_directory("../outputs")
-    output_handler.copy_files(input_file, "main.py")
+    output_handler.setup_output_directory("outputs")
+    output_handler.copy_files(input_file, "bach_generator/__main__.py")
 
     music_handler = CopyMusicHandler()
     note_names = music_handler.parse(input_file)
@@ -33,11 +33,11 @@ def main():
     quantizer.setup(encoded_inputs)
 
     managers = [
-        ModelManager(inputs=10, outputs=1, layers=3, layer_size=20) for _ in range(100)
+        ModelManager(inputs=10, outputs=1, layers=3, layer_size=20) for _ in range(10)
     ]
 
     # genetic algorithm training loop
-    for i in range(501):
+    for i in range(15):
         start_time = time.time()
 
         for manager in managers:

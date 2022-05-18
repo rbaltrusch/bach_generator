@@ -9,9 +9,9 @@ import copy
 from dataclasses import dataclass, field
 from typing import Deque, List
 
-from src.encoder import Encoder, Quantizer
-from src.judge import Judge
-from src.model import Model
+from bach_generator.src.encoder import Encoder, Quantizer
+from bach_generator.src.judge import Judge
+from bach_generator.src.model import Model
 
 
 @dataclass
