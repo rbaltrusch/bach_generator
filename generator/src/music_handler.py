@@ -5,10 +5,10 @@ Created on Wed Sep 15 18:29:08 2021
 @author: richa
 """
 from dataclasses import dataclass
-from typing import List
-from typing import Protocol
+from typing import List, Protocol
 
 import music21
+
 
 @dataclass
 class BaseMusicHandler(Protocol):
@@ -21,11 +21,14 @@ class BaseMusicHandler(Protocol):
         """Parses the specified filename and returns a list of note names"""
         stream = music21.converter.parse(filename)
         _, self.part, *_ = music21.instrument.partitionByInstrument(stream)
-        self.notes = [note for note in self.part.notes if isinstance(note, music21.note.Note)]
+        self.notes = [
+            note for note in self.part.notes if isinstance(note, music21.note.Note)
+        ]
         return [note.nameWithOctave for note in self.notes]
 
     def generate_score(self, note_names: List[str]) -> music21.stream.Score:
         """Generates music21.stream.Score from a list of note names"""
+
 
 class SimpleMusicHandler(BaseMusicHandler):
     """Music handler that writes a stream of notes as 16th to a midi file"""
@@ -36,9 +39,10 @@ class SimpleMusicHandler(BaseMusicHandler):
         """
         score = music21.stream.Score()
         for note_name in note_names:
-            note = music21.note.Note(nameWithOctave=note_name, type='16th')
+            note = music21.note.Note(nameWithOctave=note_name, type="16th")
             score.append(note)
         return score
+
 
 class CopyMusicHandler(BaseMusicHandler):
     """Music handler that copies the rhythms from the input midi and applies it

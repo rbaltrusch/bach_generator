@@ -4,10 +4,9 @@ Created on Wed Sep 15 17:34:59 2021
 
 @author: richa
 """
-
-#pylint: disable=too-few-public-methods
-
+# pylint: disable=too-few-public-methods
 from scipy import stats
+
 
 class Judge:
     """Judges a model manager"""

@@ -4,9 +4,9 @@ Created on Tue Sep 14 17:25:02 2021
 
 @author: richa
 """
-
 import random
 from typing import List
+
 
 class Model:
     """Neural network model comprised of layers."""
@@ -26,7 +26,7 @@ class Model:
 
     def build(self):
         """Adds an output layer, then builds all layers"""
-        self.add_layer(self._outputs) #output layer
+        self.add_layer(self._outputs)  # output layer
         for layer in self._layers:
             layer.build()
 
@@ -42,6 +42,7 @@ class Model:
         input_layer.set_values(inputs)
         input_layer.propagate()
         return self._layers[-1].values
+
 
 class Layer:
     """Neural network layer that manages nodes in that layer and interfaces with other layers."""
@@ -91,6 +92,7 @@ class Layer:
         """Getter for values, returns list of node.value of all nodes"""
         return [node.value for node in self.nodes]
 
+
 class Node:
     """Neural network node. Can be connected to other nodes.
     Contains a set of weights for each connected node.
@@ -108,12 +110,16 @@ class Node:
 
     def build(self):
         """Builds a random weight for each connected node"""
-        self._weights = [random.randint(0, 100) / 100 for _ in range(len(self._connected_nodes))]
+        self._weights = [
+            random.randint(0, 100) / 100 for _ in range(len(self._connected_nodes))
+        ]
 
     def jumble(self, weight_divergence: float):
         """Modifies all existing weights by + - the passed percentage weight_divergence."""
-        self._weights = [weight * (1 + random.randint(-100, 100) / 100 * weight_divergence)
-                         for weight in self._weights]
+        self._weights = [
+            weight * (1 + random.randint(-100, 100) / 100 * weight_divergence)
+            for weight in self._weights
+        ]
 
     def propagate(self):
         """Computes node value, then adds weighted node value to all connected nodes"""
@@ -129,4 +135,8 @@ class Node:
 
     def _compute_value(self):
         """Returns the average value in the value buffer. Returns 0 if value buffer is empty"""
-        return sum(self._value_buffer) / len(self._value_buffer) if self._value_buffer else 0
+        return (
+            sum(self._value_buffer) / len(self._value_buffer)
+            if self._value_buffer
+            else 0
+        )

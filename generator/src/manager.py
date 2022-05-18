@@ -4,12 +4,12 @@ Created on Tue Sep 14 18:12:32 2021
 
 @author: richa
 """
-
-import copy
 import collections
+import copy
 from dataclasses import dataclass
 
 from src.model import Model
+
 
 @dataclass
 class ModelManager:
