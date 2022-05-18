@@ -5,16 +5,16 @@ Created on Wed Sep 15 17:37:23 2021
 @author: richa
 """
 import collections
-from dataclasses import dataclass
-from typing import List
+from dataclasses import dataclass, field
+from typing import Dict, List
 
 
 @dataclass
 class Encoder:
     """Parses, encodes and decodes notes"""
 
-    _num_to_name_mapping: dict = None
-    _name_to_num_mapping: dict = None
+    _num_to_name_mapping: Dict[int, str] = field(default_factory=dict)
+    _name_to_num_mapping: Dict[str, int] = field(default_factory=dict)
 
     def encode(self, note_names: List[str]) -> List[int]:
         """Encodes a list of note names into a list of integers and remembers the mapping"""
@@ -22,24 +22,24 @@ class Encoder:
         self._num_to_name_mapping = dict(enumerate(unique_note_names))
         self._name_to_num_mapping = {v: i for i, v in enumerate(unique_note_names)}
         encoded_notes = [
-            self._name_to_num_mapping.get(note_name) for note_name in note_names
+            self._name_to_num_mapping[note_name] for note_name in note_names
         ]
         return encoded_notes
 
     def decode(self, encoded_notes: List[int]) -> List[str]:
         """Decodes the list of encoded into a list of note names (str), e.g. F#5"""
-        return [self._num_to_name_mapping.get(note) for note in encoded_notes]
+        return [self._num_to_name_mapping.get(note, "") for note in encoded_notes]
 
 
 @dataclass
 class Quantizer:
     """Quantizes notes"""
 
-    _sorted_encoded_notes: list = None
+    _sorted_encoded_notes: List[int] = field(default_factory=list)
 
     def setup(self, encoded_notes: List[int]):
         """Sets up sorted list of encoded input notes based on frequency"""
-        self._sorted_encoded_notes, _ = zip(
+        self._sorted_encoded_notes, _ = zip(  # type: ignore
             *collections.Counter(encoded_notes).most_common()
         )
 
@@ -51,10 +51,12 @@ class Quantizer:
         min_ = min(outputs)
         grounded_outputs = [output - min_ for output in outputs]
         scaling = max(grounded_outputs) / len(self._sorted_encoded_notes)
-        mapped_outputs = [round(output / scaling) for output in grounded_outputs]
+        mapped_outputs: List[int] = [
+            round(output / scaling) for output in grounded_outputs
+        ]
 
         # match values from input to output by frequency of appearance
         sorted_outputs, _ = zip(*collections.Counter(mapped_outputs).most_common())
         output_mapping = dict(zip(sorted_outputs, self._sorted_encoded_notes))
-        quantized_outputs = [output_mapping.get(note) for note in mapped_outputs]
+        quantized_outputs = [output_mapping[note] for note in mapped_outputs]
         return quantized_outputs

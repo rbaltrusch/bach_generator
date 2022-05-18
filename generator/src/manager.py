@@ -6,8 +6,11 @@ Created on Tue Sep 14 18:12:32 2021
 """
 import collections
 import copy
-from dataclasses import dataclass
+from dataclasses import dataclass, field
+from typing import Deque, List, Optional
 
+from src.encoder import Encoder, Quantizer
+from src.judge import Judge
 from src.model import Model
 
 
@@ -15,10 +18,9 @@ from src.model import Model
 class ModelManager:
     """Encodes contents of an input file, sets up and runs the model and decodes its contents"""
 
-    rating: int = 0
-    model: Model = None
-    encoded_outputs: list = None
-    decoded_outputs: list = None
+    rating: float = 0.0
+    encoded_outputs: List[int] = field(default_factory=list)
+    decoded_outputs: List[str] = field(default_factory=list)
 
     def __init__(self, inputs, outputs, layers, layer_size):
         self.model = Model(inputs, outputs)
@@ -26,10 +28,10 @@ class ModelManager:
             self.model.add_layer(layer_size)
         self.model.build()
 
-    def run_model(self, inputs, quantizer):
+    def run_model(self, inputs: List[int], quantizer: Quantizer):
         """Runs the model with the specified inputs and stores the outputs"""
-        encoded_outputs = []
-        input_deque = collections.deque(maxlen=self.model.inputs)
+        encoded_outputs: List[float] = []
+        input_deque: Deque[int] = collections.deque(maxlen=self.model.inputs)
         for input_ in inputs:
             input_deque.append(input_)
             model_outputs = self.model.compute(input_deque)
@@ -44,10 +46,10 @@ class ModelManager:
         copied_manager.model.jumble(weight_divergence)
         return copied_manager
 
-    def decode_outputs(self, decoder):
+    def decode_outputs(self, decoder: Encoder):
         """Decodes its encoded_outputs using the passed decoder and stores the results"""
         self.decoded_outputs = decoder.decode(self.encoded_outputs)
 
-    def get_rated_by(self, judge, encoded_inputs):
+    def get_rated_by(self, judge: Judge, encoded_inputs: List[int]):
         """Sets self.rating to the rating returned by the judge on encoded inputs and outputs"""
         self.rating = judge.rate(encoded_inputs, self.encoded_outputs)
