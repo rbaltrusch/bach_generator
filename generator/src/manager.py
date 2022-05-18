@@ -7,7 +7,7 @@ Created on Tue Sep 14 18:12:32 2021
 import collections
 import copy
 from dataclasses import dataclass, field
-from typing import Deque, List, Optional
+from typing import Deque, List
 
 from src.encoder import Encoder, Quantizer
 from src.judge import Judge
