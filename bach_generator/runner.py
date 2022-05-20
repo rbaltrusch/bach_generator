@@ -91,10 +91,11 @@ class GeneticAlgorithmRunner:
 
             best_manager = model_managers[0]
             logging.info(
-                "Generation %s (time=%s). Best manager rating: %s",
+                "Generation %s (steptime=%s). Amount of models: %s. Best manager rating: %s%%",
                 i,
                 round(time.time() - start_time, 2),
-                best_manager.rating * 100,
+                len(model_managers),
+                round(best_manager.rating * 100, 2),
             )
             if i % data.write_best_model_generation_interval == 0:
                 self._write_model_output(model_manager=best_manager, generation=i)
