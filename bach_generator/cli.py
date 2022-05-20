@@ -64,7 +64,7 @@ def construct_parser() -> argparse.ArgumentParser:
         "--clones",
         "-c",
         type=int,
-        default=5,
+        default=4,
         help="The amount of clones per selected top models per generation",
     )
 
