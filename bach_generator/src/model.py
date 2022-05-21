@@ -17,7 +17,7 @@ class Model:
 
     def __init__(self, inputs: int, outputs: int):
         self.inputs = inputs
-        self._layers = [Layer(inputs)]
+        self._layers: List[Layer] = [Layer(inputs)]
         self._outputs = outputs
 
     @classmethod

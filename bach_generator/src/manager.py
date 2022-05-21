@@ -25,7 +25,7 @@ class ModelManager:
     encoded_outputs: List[int] = field(default_factory=list)
     decoded_outputs: List[str] = field(default_factory=list)
 
-    def __init__(self, inputs, outputs, layers, layer_size):
+    def __init__(self, inputs: int, outputs: int, layers: int, layer_size: int):
         self.model = Model(inputs, outputs)
         for _ in range(layers):
             self.model.add_layer(layer_size)
