@@ -4,6 +4,9 @@ Created on Tue Sep 14 17:25:02 2021
 
 @author: richa
 """
+
+from __future__ import annotations
+
 import random
 from typing import List
 
@@ -51,7 +54,7 @@ class Layer:
         self.nodes = [Node() for _ in range(length)]
         self._connected_layer = None
 
-    def connect(self, layer):
+    def connect(self, layer: Layer):
         """Connects specified layer to itself, then connects all nodes of the specified layer
         with all its nodes.
         """
@@ -88,7 +91,7 @@ class Layer:
             self._connected_layer.propagate()
 
     @property
-    def values(self):
+    def values(self) -> List[float]:
         """Getter for values, returns list of node.value of all nodes"""
         return [node.value for node in self.nodes]
 
@@ -99,10 +102,10 @@ class Node:
     """
 
     def __init__(self):
-        self._weights = []
-        self._connected_nodes = []
-        self._value_buffer = []
-        self.value = None
+        self._weights: List[float] = []
+        self._connected_nodes: List[Node] = []
+        self._value_buffer: List[float] = []
+        self.value: float = None
 
     def connect(self, node):
         """Appends node to connected_nodes list"""
@@ -133,7 +136,7 @@ class Node:
         """Appends a value to the value buffer"""
         self._value_buffer.append(value)
 
-    def _compute_value(self):
+    def _compute_value(self) -> float:
         """Returns the average value in the value buffer. Returns 0 if value buffer is empty"""
         return (
             sum(self._value_buffer) / len(self._value_buffer)
