@@ -2,16 +2,29 @@
 """Main entry point for the music generator"""
 
 import logging
+import os
 import random
+from typing import List
 
 from bach_generator import cli, runner
-from bach_generator.src.manager import ModelManager
+from bach_generator.src import manager, model
 
 
-def run_simulation(args):
-    """Runs the simulation with the specified command line arguments"""
-    model_managers = [
-        ModelManager(
+def construct_model_managers(args) -> List[manager.ModelManager]:
+    """Constructs model managers or loads them from file"""
+    if args.load_filepath:
+        model_managers = [
+            manager.ModelManager.construct_with_model(model_)
+            for model_ in model.load_models(args.load_filepath)
+        ]
+        return (
+            model_managers
+            if args.load_best is None
+            else model_managers[: args.load_best]
+        )
+
+    return [
+        manager.ModelManager(
             inputs=args.inputs,
             outputs=1,
             layers=args.layers,
@@ -20,6 +33,10 @@ def run_simulation(args):
         for _ in range(args.models)
     ]
 
+
+def run_simulation(args):
+    """Runs the simulation with the specified command line arguments"""
+    model_managers = construct_model_managers(args)
     runner_data = runner.RunnerData(
         generations=args.generations,
         weight_divergence=args.weight_divergence,
@@ -30,7 +47,12 @@ def run_simulation(args):
 
     runner_ = runner.GeneticAlgorithmRunner()
     runner_.setup(input_file=args.filepath, output_directory=args.output_dir)
-    runner_.run(model_managers, data=runner_data)
+    evolved_model_managers = runner_.run(model_managers, data=runner_data)
+
+    if args.save:
+        filepath = os.path.join(runner_.output_handler.directory, "models.json")
+        models = [model_manager.model for model_manager in evolved_model_managers]
+        model.save_models(models, filepath)
 
 
 def main():

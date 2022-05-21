@@ -7,6 +7,7 @@ Created on Tue Sep 14 17:25:02 2021
 
 from __future__ import annotations
 
+import json
 import random
 from typing import List
 
@@ -18,6 +19,34 @@ class Model:
         self.inputs = inputs
         self._layers = [Layer(inputs)]
         self._outputs = outputs
+
+    @classmethod
+    def construct_from_list(cls, layers: List[List[List[float]]]) -> Model:
+        """Constructs a new Model object by deserializing the specified layers"""
+        model = Model(inputs=0, outputs=0)
+        model.deserialize(layers)
+        return model
+
+    def serialize(self) -> List[List[List[float]]]:
+        """Serializes the model"""
+        return [layer.serialize() for layer in self._layers]
+
+    def deserialize(self, layers: List[List[List[float]]]) -> None:
+        """Deserializes the passed layers"""
+        if not layers:
+            return
+
+        self._layers = []
+        for layer_list in layers:
+            layer = Layer(length=0)
+            layer.deserialize(layer_list)
+            self._layers.append(layer)
+
+        self.inputs = len(layers[0])
+        self._outputs = len(layers[-1])
+
+        for previous_layer, layer in zip(self._layers, self._layers[1:]):
+            previous_layer.connect(layer)
 
     def add_layer(self, length: int):
         """Instantiates a new Layer of the specified length, connects it to the last layer
@@ -53,6 +82,18 @@ class Layer:
     def __init__(self, length: int):
         self.nodes = [Node() for _ in range(length)]
         self._connected_layer = None
+
+    def serialize(self) -> List[List[float]]:
+        """Serialises the layer"""
+        return [node.serialize() for node in self.nodes]
+
+    def deserialize(self, nodes: List[List[float]]) -> None:
+        """Deserializes the passed nodes"""
+        self.nodes = []
+        for weights in nodes:
+            node = Node()
+            node.deserialize(weights)
+            self.nodes.append(node)
 
     def connect(self, layer: Layer):
         """Connects specified layer to itself, then connects all nodes of the specified layer
@@ -107,6 +148,14 @@ class Node:
         self._value_buffer: List[float] = []
         self.value: float = None
 
+    def serialize(self) -> List[float]:
+        """Serialises the node"""
+        return self._weights
+
+    def deserialize(self, weights: List[float]) -> None:
+        """Deserializes the node with the specified weights"""
+        self._weights = weights
+
     def connect(self, node):
         """Appends node to connected_nodes list"""
         self._connected_nodes.append(node)
@@ -143,3 +192,16 @@ class Node:
             if self._value_buffer
             else 0
         )
+
+
+def save_models(models: List[Model], filepath: str):
+    """Saves the models to the specified filepath as json"""
+    with open(filepath, "w", encoding="utf-8") as file:
+        json.dump([model.serialize() for model in models], file, indent=4)
+
+
+def load_models(filepath: str) -> List[Model]:
+    """Loads the models from the specified json filepath"""
+    with open(filepath, "r", encoding="utf-8") as file:
+        contents = json.load(file)
+    return [Model.construct_from_list(list_) for list_ in contents]

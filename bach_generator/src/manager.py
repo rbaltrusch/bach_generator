@@ -31,6 +31,13 @@ class ModelManager:
             self.model.add_layer(layer_size)
         self.model.build()
 
+    @classmethod
+    def construct_with_model(cls, model: Model) -> ModelManager:
+        """Constructs a new ModelManager with the specified model"""
+        model_manager = ModelManager(inputs=0, outputs=0, layers=0, layer_size=0)
+        model_manager.model = model
+        return model_manager
+
     def run_model(self, inputs: List[int], quantizer: Quantizer) -> None:
         """Runs the model with the specified inputs and stores the outputs"""
         encoded_outputs: List[float] = []

@@ -21,6 +21,26 @@ def construct_parser() -> argparse.ArgumentParser:
     )
 
     parser.add_argument(
+        "--save",
+        action="store_true",
+        default=False,
+        help="Saves the surviving models to json file at the end of the simulation",
+    )
+
+    parser.add_argument(
+        "--load",
+        dest="load_filepath",
+        help="The json filepath from which to load serialized models",
+    )
+
+    parser.add_argument(
+        "--load-best",
+        type=int,
+        default=None,
+        help="The amount of models to load from file, sorted by rating",
+    )
+
+    parser.add_argument(
         "--models",
         "-m",
         type=int,
