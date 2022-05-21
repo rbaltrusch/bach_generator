@@ -76,6 +76,9 @@ class GeneticAlgorithmRunner:
         """Runs a genetic algorithm with the models using the input RunnerData.
         Returns a sorted list of evolved models once finished.
         """
+        if not model_managers:
+            return []
+
         for i in range(1, data.generations + 1):
             start_time = time.time()
 
