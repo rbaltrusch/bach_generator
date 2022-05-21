@@ -6,6 +6,7 @@ Created on Wed Sep 15 17:37:23 2021
 """
 import collections
 from dataclasses import dataclass, field
+from itertools import zip_longest
 from typing import Dict, List
 
 
@@ -18,7 +19,9 @@ class Encoder:
 
     def encode(self, note_names: List[str]) -> List[int]:
         """Encodes a list of note names into a list of integers and remembers the mapping"""
-        unique_note_names = set(note_names)
+        unique_note_names = list(
+            dict.fromkeys(note_names)
+        )  # substitute for ordered set
         self._num_to_name_mapping = dict(enumerate(unique_note_names))
         self._name_to_num_mapping = {v: i for i, v in enumerate(unique_note_names)}
         encoded_notes = [
@@ -57,6 +60,8 @@ class Quantizer:
 
         # match values from input to output by frequency of appearance
         sorted_outputs, _ = zip(*collections.Counter(mapped_outputs).most_common())
-        output_mapping = dict(zip(sorted_outputs, self._sorted_encoded_notes))
+        output_mapping = dict(
+            zip_longest(sorted_outputs, self._sorted_encoded_notes[:len(sorted_outputs)], fillvalue=0)
+        )
         quantized_outputs = [output_mapping[note] for note in mapped_outputs]
         return quantized_outputs
