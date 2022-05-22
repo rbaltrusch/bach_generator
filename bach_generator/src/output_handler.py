@@ -14,7 +14,8 @@ import music21
 class OutputHandler:
     """Handles setup of output directory and output files"""
 
-    directory: str = ""
+    def __init__(self):
+        self.directory: str = ""
 
     def setup_output_directory(self, directory: str):
         """Sets up a timestamped subdirectory in the passed directory"""
