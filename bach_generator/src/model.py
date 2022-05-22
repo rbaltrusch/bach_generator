@@ -9,7 +9,7 @@ from __future__ import annotations
 
 import json
 import random
-from typing import List
+from typing import Callable, List
 
 
 class Model:
@@ -62,10 +62,10 @@ class Model:
         for layer in self._layers:
             layer.build()
 
-    def jumble(self, weight_divergence: float):
+    def jumble(self, jumble_strategy: JumbleStrategy, weight_divergence: float):
         """Jumbles all layers with the weight_divergence specified"""
         for layer in self._layers:
-            layer.jumble(weight_divergence)
+            layer.jumble(jumble_strategy, weight_divergence)
 
     def compute(self, inputs: List[int]) -> List[float]:
         """Sets values of input layer to the specified inputs, then propagates to other layers.
@@ -109,10 +109,10 @@ class Layer:
         for node in self.nodes:
             node.build()
 
-    def jumble(self, weight_divergence: float):
+    def jumble(self, jumble_strategy: JumbleStrategy, weight_divergence: float):
         """Jumbles all nodes with the weight_divergence specified"""
         for node in self.nodes:
-            node.jumble(weight_divergence)
+            node.jumble(jumble_strategy, weight_divergence)
 
     def set_values(self, values: List[int]):
         """Sets value of nodes to specified values"""
@@ -143,18 +143,18 @@ class Node:
     """
 
     def __init__(self):
-        self._weights: List[float] = []
+        self.weights: List[float] = []
         self._connected_nodes: List[Node] = []
         self._value_buffer: List[float] = []
         self.value: float = None
 
     def serialize(self) -> List[float]:
         """Serialises the node"""
-        return self._weights
+        return self.weights
 
     def deserialize(self, weights: List[float]) -> None:
         """Deserializes the node with the specified weights"""
-        self._weights = weights
+        self.weights = weights
 
     def connect(self, node):
         """Appends node to connected_nodes list"""
@@ -162,23 +162,20 @@ class Node:
 
     def build(self):
         """Builds a random weight for each connected node"""
-        self._weights = [
+        self.weights = [
             random.randint(0, 100) / 100 for _ in range(len(self._connected_nodes))
         ]
 
-    def jumble(self, weight_divergence: float):
+    def jumble(self, jumble_strategy: JumbleStrategy, weight_divergence: float):
         """Modifies all existing weights by + - the passed percentage weight_divergence."""
-        self._weights = [
-            weight * (1 + random.randint(-100, 100) / 100 * weight_divergence)
-            for weight in self._weights
-        ]
+        jumble_strategy(self, weight_divergence)
 
     def propagate(self):
         """Computes node value, then adds weighted node value to all connected nodes"""
         self.value = self._compute_value()
         self._value_buffer = []
 
-        for weight, node in zip(self._weights, self._connected_nodes):
+        for weight, node in zip(self.weights, self._connected_nodes):
             node.add_value(self.value * weight)
 
     def add_value(self, value):
@@ -192,6 +189,27 @@ class Node:
             if self._value_buffer
             else 0
         )
+
+
+JumbleStrategy = Callable[[Node, float], None]
+
+
+def jumble_by_offsets_strategy(node: Node, weight_divergence: float) -> None:
+    """Jumbles all node weights by a random offset"""
+    node.weights = [
+        weight * (1 + random.randint(-100, 100) / 100 * weight_divergence)
+        for weight in node.weights
+    ]
+
+
+def jumble_by_selection_strategy(node: Node, weight_divergence: float) -> None:
+    """Jumbles randomly selected node weights"""
+    indices = random.choices(
+        list(range(len(node.weights))),
+        k=min(1, round(weight_divergence * len(node.weights))),
+    )
+    for index in indices:
+        node.weights[index] = random.randint(0, 100) / 100
 
 
 def save_models(models: List[Model], filepath: str):

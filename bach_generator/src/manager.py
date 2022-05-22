@@ -14,7 +14,7 @@ from typing import Deque, List
 
 from bach_generator.src.encoder import Encoder, Quantizer
 from bach_generator.src.judge import Judge
-from bach_generator.src.model import Model
+from bach_generator.src.model import JumbleStrategy, Model
 
 
 @dataclass
@@ -48,12 +48,14 @@ class ModelManager:
             encoded_outputs.extend(model_outputs)
         self.encoded_outputs = quantizer.quantize(encoded_outputs)
 
-    def clone(self, weight_divergence: float) -> ModelManager:
+    def clone(
+        self, jumble_strategy: JumbleStrategy, weight_divergence: float
+    ) -> ModelManager:
         """Clones itself and jumbles up the weights in the model copy
-        with the specified weight divergence.
+        with the specified jumble strategy and weight divergence.
         """
         copied_manager = copy.deepcopy(self)
-        copied_manager.model.jumble(weight_divergence)
+        copied_manager.model.jumble(jumble_strategy, weight_divergence)
         return copied_manager
 
     def decode_outputs(self, decoder: Encoder) -> None:

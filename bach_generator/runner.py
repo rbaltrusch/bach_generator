@@ -9,6 +9,7 @@ from typing import List
 from bach_generator.src.encoder import Encoder, Quantizer
 from bach_generator.src.judge import Judge
 from bach_generator.src.manager import ModelManager
+from bach_generator.src.model import JumbleStrategy, jumble_by_offsets_strategy
 from bach_generator.src.music_handler import CopyMusicHandler
 from bach_generator.src.output_handler import OutputHandler
 
@@ -22,6 +23,7 @@ class RunnerData:
     selected_models_per_generation: int = 20
     clones_per_model_per_generation: int = 5
     write_best_model_generation_interval: int = 10
+    weight_jumble_strategy: JumbleStrategy = jumble_by_offsets_strategy
 
 
 def _select_best_models(
@@ -30,12 +32,10 @@ def _select_best_models(
     return sorted(model_managers, key=lambda x: x.rating, reverse=True)[:amount]
 
 
-def _append_clones(
-    model_managers: List[ModelManager], weight_divergence: float, number_of_clones: int
-) -> None:
+def _append_clones(model_managers: List[ModelManager], data: RunnerData) -> None:
     clones = [
-        manager.clone(weight_divergence)
-        for _ in range(number_of_clones)
+        manager.clone(data.weight_jumble_strategy, data.weight_divergence)
+        for _ in range(data.clones_per_model_per_generation)
         for manager in model_managers
     ]
     model_managers.extend(clones)
@@ -86,11 +86,7 @@ class GeneticAlgorithmRunner:
             model_managers = _select_best_models(
                 model_managers, amount=data.selected_models_per_generation
             )
-            _append_clones(
-                model_managers,
-                data.weight_divergence,
-                number_of_clones=data.clones_per_model_per_generation,
-            )
+            _append_clones(model_managers, data)
 
             best_manager = model_managers[0]
             logging.info(

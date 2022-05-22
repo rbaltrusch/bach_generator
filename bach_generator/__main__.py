@@ -34,6 +34,15 @@ def construct_model_managers(args) -> List[manager.ModelManager]:
     ]
 
 
+def get_weight_jumble_strategy(args) -> model.JumbleStrategy:
+    """Returns the jumble strategy chosen from the cli args"""
+    strategies = {
+        "offset": model.jumble_by_offsets_strategy,
+        "selection": model.jumble_by_selection_strategy,
+    }
+    return strategies.get(args.weight_jumble_strategy)
+
+
 def run_simulation(args):
     """Runs the simulation with the specified command line arguments"""
     model_managers = construct_model_managers(args)
@@ -43,6 +52,7 @@ def run_simulation(args):
         selected_models_per_generation=args.select_models,
         clones_per_model_per_generation=args.clones,
         write_best_model_generation_interval=args.write_interval,
+        weight_jumble_strategy=get_weight_jumble_strategy(args),
     )
 
     runner_ = runner.GeneticAlgorithmRunner()
