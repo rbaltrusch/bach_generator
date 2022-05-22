@@ -4,14 +4,15 @@ Created on Wed Sep 15 18:29:08 2021
 
 @author: richa
 """
+from abc import ABC, abstractmethod
 from dataclasses import dataclass
-from typing import List, Protocol
+from typing import List
 
 import music21
 
 
 @dataclass
-class BaseMusicHandler(Protocol):
+class BaseMusicHandler(ABC):
     """Base music handler class. Template: already implements the parse method"""
 
     part: music21.stream.Part = None
@@ -26,6 +27,7 @@ class BaseMusicHandler(Protocol):
         ]
         return [note.nameWithOctave for note in self.notes]
 
+    @abstractmethod
     def generate_score(self, note_names: List[str]) -> music21.stream.Score:
         """Generates music21.stream.Score from a list of note names"""
 
@@ -49,7 +51,7 @@ class CopyMusicHandler(BaseMusicHandler):
     to the score generated with the output notes.
     """
 
-    def generate_score(self, note_names: List[str]):
+    def generate_score(self, note_names: List[str]) -> music21.stream.Score:
         """Returns the score that was read in using the parse method, with all
         notes replaced by the specified note names.
         """

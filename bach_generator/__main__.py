@@ -7,7 +7,7 @@ import random
 from typing import List
 
 from bach_generator import cli, runner
-from bach_generator.src import manager, model
+from bach_generator.src import manager, model, music_handler
 
 
 def construct_model_managers(args) -> List[manager.ModelManager]:
@@ -43,6 +43,15 @@ def get_weight_jumble_strategy(args) -> model.JumbleStrategy:
     return strategies.get(args.weight_jumble_strategy)
 
 
+def get_music_handler(args) -> music_handler.BaseMusicHandler:
+    """Returns the music handler chosen from the cli args"""
+    handlers = {
+        "simple": music_handler.SimpleMusicHandler,
+        "copy": music_handler.CopyMusicHandler,
+    }
+    return handlers.get(args.rhythm_handler)()
+
+
 def run_simulation(args):
     """Runs the simulation with the specified command line arguments"""
     model_managers = construct_model_managers(args)
@@ -55,7 +64,7 @@ def run_simulation(args):
         weight_jumble_strategy=get_weight_jumble_strategy(args),
     )
 
-    runner_ = runner.GeneticAlgorithmRunner()
+    runner_ = runner.GeneticAlgorithmRunner(music_handler=get_music_handler(args))
     runner_.setup(input_file=args.filepath, output_directory=args.output_dir)
     evolved_model_managers = runner_.run(model_managers, data=runner_data)
 

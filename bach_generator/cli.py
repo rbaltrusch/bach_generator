@@ -121,6 +121,15 @@ def construct_parser() -> argparse.ArgumentParser:
     )
 
     parser.add_argument(
+        "--rhythm",
+        "-r",
+        choices=["simple", "copy"],
+        default="copy",
+        dest="rhythm_handler",
+        help="The rhythm generation strategy to use",
+    )
+
+    parser.add_argument(
         "--seed",
         type=int,
         default=None,
