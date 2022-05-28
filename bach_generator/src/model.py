@@ -9,16 +9,19 @@ from __future__ import annotations
 
 import json
 import random
+from dataclasses import dataclass
 from typing import Callable, List
 
 
+@dataclass
 class Model:
     """Neural network model comprised of layers."""
 
-    def __init__(self, inputs: int, outputs: int):
-        self.inputs = inputs
-        self._layers: List[Layer] = [Layer(inputs)]
-        self._outputs = outputs
+    inputs: int
+    outputs: int
+
+    def __post_init__(self):
+        self._layers: List[Layer] = [Layer(self.inputs)]
 
     @classmethod
     def construct_from_list(cls, layers: List[List[List[float]]]) -> Model:
@@ -43,7 +46,7 @@ class Model:
             self._layers.append(layer)
 
         self.inputs = len(layers[0])
-        self._outputs = len(layers[-1])
+        self.outputs = len(layers[-1])
 
         for previous_layer, layer in zip(self._layers, self._layers[1:]):
             previous_layer.connect(layer)
@@ -58,7 +61,7 @@ class Model:
 
     def build(self):
         """Adds an output layer, then builds all layers"""
-        self.add_layer(self._outputs)  # output layer
+        self.add_layer(self.outputs)  # output layer
         for layer in self._layers:
             layer.build()
 
