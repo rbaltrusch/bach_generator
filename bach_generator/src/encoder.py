@@ -14,8 +14,8 @@ from typing import Dict, List
 class Encoder:
     """Parses, encodes and decodes notes"""
 
-    _num_to_name_mapping: Dict[int, str] = field(default_factory=dict)
-    _name_to_num_mapping: Dict[str, int] = field(default_factory=dict)
+    _num_to_name_mapping: Dict[int, str] = field(default_factory=dict, init=False)
+    _name_to_num_mapping: Dict[str, int] = field(default_factory=dict, init=False)
 
     def encode(self, note_names: List[str]) -> List[int]:
         """Encodes a list of note names into a list of integers and remembers the mapping"""
@@ -38,7 +38,7 @@ class Encoder:
 class Quantizer:
     """Quantizes notes"""
 
-    _sorted_encoded_notes: List[int] = field(default_factory=list)
+    _sorted_encoded_notes: List[int] = field(default_factory=list, init=False)
 
     def setup(self, encoded_notes: List[int]):
         """Sets up sorted list of encoded input notes based on frequency"""

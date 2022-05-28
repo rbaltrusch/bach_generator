@@ -22,8 +22,8 @@ class ModelManager:
     """Encodes contents of an input file, sets up and runs the model and decodes its contents"""
 
     rating: float = 0.0
-    encoded_outputs: List[int] = field(default_factory=list)
-    decoded_outputs: List[str] = field(default_factory=list)
+    encoded_outputs: List[int] = field(default_factory=list, init=False)
+    decoded_outputs: List[str] = field(default_factory=list, init=False)
 
     def __init__(self, inputs: int, outputs: int, layers: int, layer_size: int):
         self.model = Model(inputs, outputs)
