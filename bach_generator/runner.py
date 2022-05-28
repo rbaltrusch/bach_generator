@@ -9,7 +9,7 @@ from typing import List
 from bach_generator.src.encoder import Encoder, Quantizer
 from bach_generator.src.judge import Judge
 from bach_generator.src.manager import ModelManager
-from bach_generator.src.model import JumbleStrategy, jumble_by_offsets_strategy
+from bach_generator.src.model import JumbleStrategy, jumble_by_factor_strategy
 from bach_generator.src.music_handler import CopyMusicHandler
 from bach_generator.src.output_handler import OutputHandler
 
@@ -23,7 +23,7 @@ class RunnerData:
     selected_models_per_generation: int = 20
     clones_per_model_per_generation: int = 5
     write_best_model_generation_interval: int = 10
-    weight_jumble_strategy: JumbleStrategy = jumble_by_offsets_strategy
+    weight_jumble_strategy: JumbleStrategy = jumble_by_factor_strategy
 
 
 def _select_best_models(

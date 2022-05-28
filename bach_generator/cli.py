@@ -91,8 +91,8 @@ def construct_parser() -> argparse.ArgumentParser:
     parser.add_argument(
         "--weight-jumble-by",
         "-wj",
-        choices=["offset", "selection"],
-        default="offset",
+        choices=["factor", "selection"],
+        default="factor",
         dest="weight_jumble_strategy",
         help="The method to be used to jumble model weights on cloning",
     )

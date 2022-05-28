@@ -194,7 +194,7 @@ class Node:
 JumbleStrategy = Callable[[Node, float], None]
 
 
-def jumble_by_offsets_strategy(node: Node, weight_divergence: float) -> None:
+def jumble_by_factor_strategy(node: Node, weight_divergence: float) -> None:
     """Jumbles all node weights by a random offset"""
     node.weights = [
         weight * (1 + random.randint(-100, 100) / 100 * weight_divergence)

@@ -37,7 +37,7 @@ def construct_model_managers(args) -> List[manager.ModelManager]:
 def get_weight_jumble_strategy(args) -> model.JumbleStrategy:
     """Returns the jumble strategy chosen from the cli args"""
     strategies = {
-        "offset": model.jumble_by_offsets_strategy,
+        "factor": model.jumble_by_factor_strategy,
         "selection": model.jumble_by_selection_strategy,
     }
     return strategies.get(args.weight_jumble_strategy)
