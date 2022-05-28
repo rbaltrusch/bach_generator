@@ -1,0 +1,7 @@
+# .coveragerc to control coverage.py (pytest-cov)
+
+[run]
+omit =
+    ../bach_generator/__main__.py,
+    ../setup.py,
+    unit/*.py,

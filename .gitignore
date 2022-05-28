@@ -1,5 +1,7 @@
 data/
+!tests/data/
 outputs/
+tests/reports/
 .pylint.d/
 .vscode/
 command.bat
