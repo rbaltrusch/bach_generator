@@ -42,6 +42,8 @@ class Quantizer:
 
     def setup(self, encoded_notes: List[int]):
         """Sets up sorted list of encoded input notes based on frequency"""
+        if not encoded_notes:
+            return
         self._sorted_encoded_notes, _ = zip(  # type: ignore
             *collections.Counter(encoded_notes).most_common()
         )
@@ -50,6 +52,9 @@ class Quantizer:
         """Quantizes a list of floats into a list of ints based on its frequency
         relative to the sorted_encoded_notes set using the setup method.
         """
+        if not outputs or not self._sorted_encoded_notes:
+            return []
+
         # map outputs to values between 0 and the total number of possible encodings
         min_ = min(outputs)
         grounded_outputs = [output - min_ for output in outputs]
