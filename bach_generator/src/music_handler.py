@@ -5,26 +5,29 @@ Created on Wed Sep 15 18:29:08 2021
 @author: richa
 """
 from abc import ABC, abstractmethod
-from dataclasses import dataclass
 from typing import List
 
 import music21
 
 
-@dataclass
+def extract_notes_from_part(part: music21.stream.Part) -> List[music21.note.Note]:
+    """Extracts all note objects from the specified part"""
+    return [note for note in part.notes if isinstance(note, music21.note.Note)]
+
+
 class BaseMusicHandler(ABC):
     """Base music handler class. Template: already implements the parse method"""
 
-    part: music21.stream.Part = None
-    notes: list = None
+    def __init__(self):
+        self.part: music21.stream.Part = None
+        self.notes: List[music21.note.Note] = None
 
     def parse(self, filename) -> List[int]:
         """Parses the specified filename and returns a list of note names"""
         stream = music21.converter.parse(filename)
-        _, self.part, *_ = music21.instrument.partitionByInstrument(stream)
-        self.notes = [
-            note for note in self.part.notes if isinstance(note, music21.note.Note)
-        ]
+        parts = list(music21.instrument.partitionByInstrument(stream))
+        self.part = parts[1] if len(parts) > 1 else parts[0]
+        self.notes = extract_notes_from_part(self.part)
         return [note.nameWithOctave for note in self.notes]
 
     @abstractmethod
