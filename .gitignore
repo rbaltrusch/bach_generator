@@ -2,6 +2,7 @@ data/
 outputs/
 .pylint.d/
 .vscode/
+command.bat
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
