@@ -61,7 +61,11 @@ class Quantizer:
         # match values from input to output by frequency of appearance
         sorted_outputs, _ = zip(*collections.Counter(mapped_outputs).most_common())
         output_mapping = dict(
-            zip_longest(sorted_outputs, self._sorted_encoded_notes[:len(sorted_outputs)], fillvalue=0)
+            zip_longest(
+                sorted_outputs,
+                self._sorted_encoded_notes[: len(sorted_outputs)],
+                fillvalue=0,
+            )
         )
         quantized_outputs = [output_mapping[note] for note in mapped_outputs]
         return quantized_outputs
