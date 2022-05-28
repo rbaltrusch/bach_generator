@@ -60,7 +60,8 @@ class Quantizer:
         grounded_outputs = [output - min_ for output in outputs]
         scaling = max(grounded_outputs) / len(self._sorted_encoded_notes)
         mapped_outputs: List[int] = [
-            round(output / scaling) for output in grounded_outputs
+            round(output / scaling) if scaling != 0 else 0
+            for output in grounded_outputs
         ]
 
         # match values from input to output by frequency of appearance
