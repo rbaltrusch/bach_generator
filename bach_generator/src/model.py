@@ -202,9 +202,16 @@ def jumble_by_factor_strategy(node: Node, weight_divergence: float) -> None:
 
 def jumble_by_selection_strategy(node: Node, weight_divergence: float) -> None:
     """Jumbles randomly selected node weights"""
-    indices = random.choices(
-        list(range(len(node.weights))),
-        k=min(1, round(weight_divergence * len(node.weights))),
+    if not weight_divergence:
+        return
+
+    len_ = len(node.weights)
+    if not len_:
+        return
+
+    indices = random.sample(
+        list(range(len_)),
+        k=min(len_, max(1, round(abs(weight_divergence) * len_))),
     )
     for index in indices:
         node.weights[index] = random.randint(0, 100) / 100
