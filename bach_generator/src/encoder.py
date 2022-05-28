@@ -7,7 +7,7 @@ Created on Wed Sep 15 17:37:23 2021
 import collections
 from dataclasses import dataclass, field
 from itertools import zip_longest
-from typing import Dict, List
+from typing import Dict, List, Tuple
 
 
 @dataclass
@@ -38,7 +38,7 @@ class Encoder:
 class Quantizer:
     """Quantizes notes"""
 
-    _sorted_encoded_notes: List[int] = field(default_factory=list, init=False)
+    _sorted_encoded_notes: Tuple[int] = field(default_factory=tuple, init=False)
 
     def setup(self, encoded_notes: List[int]):
         """Sets up sorted list of encoded input notes based on frequency"""
