@@ -119,11 +119,6 @@ class Layer:
 
     def set_values(self, values: List[int]):
         """Sets value of nodes to specified values"""
-        try:
-            iter(values)  # type: ignore
-        except TypeError:
-            values: List[int] = [values]  # type: ignore
-
         for node, value in zip(self.nodes, values):
             node.add_value(value)
 
