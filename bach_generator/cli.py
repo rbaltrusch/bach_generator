@@ -139,7 +139,7 @@ def construct_parser() -> argparse.ArgumentParser:
     return parser
 
 
-def display_args(args):
+def display_args(args: argparse.Namespace):
     """Logs all attributes of the arguments namespace passed"""
     for name, value in vars(args).items():
         logging.info("Using setting %s: %s", name, value)

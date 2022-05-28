@@ -10,7 +10,7 @@ from __future__ import annotations
 import json
 import random
 from dataclasses import dataclass
-from typing import Callable, List
+from typing import Callable, Iterable, List, Optional
 
 
 @dataclass
@@ -70,7 +70,7 @@ class Model:
         for layer in self._layers:
             layer.jumble(jumble_strategy, weight_divergence)
 
-    def compute(self, inputs: List[int]) -> List[float]:
+    def compute(self, inputs: Iterable[int]) -> List[float]:
         """Sets values of input layer to the specified inputs, then propagates to other layers.
         Returns values of the output layer"""
         input_layer = self._layers[0]
@@ -83,7 +83,7 @@ class Layer:
     """Neural network layer that manages nodes in that layer and interfaces with other layers."""
 
     def __init__(self, length: int):
-        self.nodes = [Node() for _ in range(length)]
+        self.nodes: List[Node] = [Node() for _ in range(length)]
         self._connected_layer = None
 
     def serialize(self) -> List[List[float]]:
@@ -105,7 +105,7 @@ class Layer:
         self._connected_layer = layer
         for foreign_node in layer.nodes:
             for own_node in self.nodes:
-                own_node.connect(foreign_node)
+                own_node.connect(foreign_node)  # type: ignore
 
     def build(self):
         """Builds all nodes"""
@@ -117,7 +117,7 @@ class Layer:
         for node in self.nodes:
             node.jumble(jumble_strategy, weight_divergence)
 
-    def set_values(self, values: List[int]):
+    def set_values(self, values: Iterable[int]):
         """Sets value of nodes to specified values"""
         for node, value in zip(self.nodes, values):
             node.add_value(value)
@@ -132,7 +132,7 @@ class Layer:
     @property
     def values(self) -> List[float]:
         """Getter for values, returns list of node.value of all nodes"""
-        return [node.value for node in self.nodes]
+        return [node.value for node in self.nodes]  # type: ignore
 
 
 class Node:
@@ -144,7 +144,7 @@ class Node:
         self.weights: List[float] = []
         self._connected_nodes: List[Node] = []
         self._value_buffer: List[float] = []
-        self.value: float = None
+        self.value: Optional[float] = None
 
     def serialize(self) -> List[float]:
         """Serialises the node"""
@@ -154,7 +154,7 @@ class Node:
         """Deserializes the node with the specified weights"""
         self.weights = weights
 
-    def connect(self, node):
+    def connect(self, node: Node):
         """Appends node to connected_nodes list"""
         self._connected_nodes.append(node)
 
@@ -176,7 +176,7 @@ class Node:
         for weight, node in zip(self.weights, self._connected_nodes):
             node.add_value(self.value * weight)
 
-    def add_value(self, value):
+    def add_value(self, value: float):
         """Appends a value to the value buffer"""
         self._value_buffer.append(value)
 
