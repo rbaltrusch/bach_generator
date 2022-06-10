@@ -6,8 +6,6 @@
 
 A Bach music generator using a neural network trained with a genetic algorithm.
 
-![Screenshot of the analysis GUI](bach_generator/gui/media/screenshot.png?raw=true "Screenshot of the analysis GUI")
-
 ## Motivation
 
 The neural network was setup and trained from scratch. The main motivation behind this was learning how one might code a neural network without using a library abstracting away all the details.
@@ -94,6 +92,10 @@ To see the full CLI documentation, run the CLI help command:
 ```
 python -m bach_generator -h
 ```
+
+Running the package without specifying any CLI arguments with `python -m bach_generator` instead opens the graphical user interface:
+
+![Screenshot of the analysis GUI](https://github.com/rbaltrusch/bach_generator/blob/master/bach_generator/gui/media/screenshot.PNG?raw=true "Screenshot of the analysis GUI")
 
 ## Contributions
 
