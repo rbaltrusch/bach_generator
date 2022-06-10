@@ -7,6 +7,7 @@ import random
 from typing import List, Type
 
 from bach_generator import cli, runner
+from bach_generator.gui import app, init
 from bach_generator.src import manager, model, music_handler
 
 
@@ -61,8 +62,9 @@ def get_layer_type(args) -> Type:
     return layer_types.get(args.layer_type)
 
 
-def run_simulation(args):
-    """Runs the simulation with the specified command line arguments"""
+def setup_simulation(args):
+    """Sets up the simulation using the cli args"""
+    random.seed(args.seed)
     model.Model.layer_class = get_layer_type(args)
     model_managers = construct_model_managers(args)
     runner_data = runner.RunnerData(
@@ -76,7 +78,12 @@ def run_simulation(args):
 
     runner_ = runner.GeneticAlgorithmRunner(music_handler=get_music_handler(args))
     runner_.setup(input_file=args.filepath, output_directory=args.output_dir)
+    return runner_, runner_data, model_managers
 
+
+def run_simulation(args):
+    """Runs the simulation with the specified command line arguments"""
+    runner_, runner_data, model_managers = setup_simulation(args)
     try:
         model_managers = runner_.run(model_managers, data=runner_data)
     except KeyboardInterrupt:
@@ -89,13 +96,25 @@ def run_simulation(args):
         logging.info("Saved models to file")
 
 
+def run_gui():
+    """Runs the graphical interface"""
+    init.init()
+    app.data["setup_function"] = setup_simulation
+    app.pack_all()
+    app.mainloop()
+
+
 def main():
     """Main function"""
     logging.basicConfig(level=logging.INFO, format="%(asctime)s %(message)s")
     parser = cli.construct_parser()
-    args = parser.parse_args()
+    try:
+        args = parser.parse_args()
+    except SystemExit:
+        run_gui()
+        return
+
     cli.display_args(args)
-    random.seed(args.seed)
     run_simulation(args)
 
 

@@ -6,6 +6,8 @@
 
 A Bach music generator using a neural network trained with a genetic algorithm.
 
+![Screenshot of the analysis GUI](bach_generator/gui/media/screenshot.png?raw=true "Screenshot of the analysis GUI")
+
 ## Motivation
 
 The neural network was setup and trained from scratch. The main motivation behind this was learning how one might code a neural network without using a library abstracting away all the details.
@@ -21,7 +23,13 @@ To install all python dependencies, run the following in your command line:
 
     python -m pip install -r requirements.txt
 
-Run the music generator by calling the package and passing a midi filepath to it:
+Running the package without any arguments opens the graphical user interface instead:
+
+```
+python -m bach_generator
+```
+
+Run the music generator cli by calling the package and passing a midi filepath to it:
 
 ```
 python -m bach_generator <midi_filepath>
