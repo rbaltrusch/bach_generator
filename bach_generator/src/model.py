@@ -12,6 +12,78 @@ import random
 from dataclasses import dataclass
 from typing import Callable, Iterable, List, Optional
 
+import numpy
+
+
+class MatrixLayer:
+    """Neural network layer that manages weight matrices connected to other layers"""
+
+    def __init__(self, length: int):
+        self._values: numpy.ndarray = numpy.zeros(shape=(length, 1))
+        self._matrix: Optional[numpy.ndarray] = None
+        self.length = length
+        self._connected_layer = None
+
+    def serialize(self) -> List[List[float]]:
+        """Serialises the layer"""
+        return [list(self._matrix[i, :]) for i in range(self._matrix.shape[0])]
+
+    def deserialize(self, nodes: List[List[float]]) -> None:
+        """Deserializes the passed weights"""
+        columns = tuple(
+            numpy.reshape(
+                numpy.array(weights),
+                (1, len(weights)),
+            )
+            for weights in nodes
+        )
+        self._matrix = numpy.concatenate(columns, axis=0)
+        self.length = self._matrix.shape[0]
+
+    def connect(self, layer: MatrixLayer):
+        """Connects specified layer to itself"""
+        self._connected_layer = layer
+
+    def build(self):
+        """Builds the layer matrix"""
+        height = self._connected_layer.length if self._connected_layer else 1
+        self._matrix = numpy.random.rand(self.length, height)
+
+    def jumble(
+        self,
+        jumble_strategy: JumbleStrategy,  # pylint: disable=unused-argument
+        weight_divergence: float,
+    ):
+        """Adds normal noise to the matrix with weight_divergence being the variance"""
+        self._matrix += numpy.random.normal(scale=weight_divergence)
+
+    def set_values(self, values: Iterable[int]):
+        """Calculates the dot product of the specified values and the weight matrix"""
+        if not isinstance(values, numpy.ndarray):
+            values = numpy.array(values, dtype=numpy.float64)
+
+        height = self._matrix.shape[0]
+        values = numpy.reshape(values, (1, values.size))
+
+        if values.size < height:
+            values = numpy.concatenate(
+                (values, numpy.zeros(shape=(1, height - values.size))), axis=1
+            )
+
+        self._values = numpy.dot(values, self._matrix)
+
+    def propagate(self):
+        """Propagates own values to connected layer"""
+        if not self._connected_layer:
+            return
+        self._connected_layer.set_values(self._values)
+        self._connected_layer.propagate()
+
+    @property
+    def values(self) -> List[float]:
+        """Getter for values, returns list of node.value of all nodes"""
+        return [x for y in self._values for x in y]
+
 
 class Layer:
     """Neural network layer that manages nodes in that layer and interfaces with other layers."""
