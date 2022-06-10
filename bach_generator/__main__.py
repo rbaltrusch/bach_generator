@@ -76,12 +76,17 @@ def run_simulation(args):
 
     runner_ = runner.GeneticAlgorithmRunner(music_handler=get_music_handler(args))
     runner_.setup(input_file=args.filepath, output_directory=args.output_dir)
-    evolved_model_managers = runner_.run(model_managers, data=runner_data)
+
+    try:
+        model_managers = runner_.run(model_managers, data=runner_data)
+    except KeyboardInterrupt:
+        logging.info("Interrupted model run")
 
     if args.save:
         filepath = os.path.join(runner_.output_handler.directory, "models.json")
-        models = [model_manager.model for model_manager in evolved_model_managers]
+        models = [model_manager.model for model_manager in model_managers]
         model.save_models(models, filepath)
+        logging.info("Saved models to file")
 
 
 def main():
