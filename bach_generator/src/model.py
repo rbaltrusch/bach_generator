@@ -13,72 +13,6 @@ from dataclasses import dataclass
 from typing import Callable, Iterable, List, Optional
 
 
-@dataclass
-class Model:
-    """Neural network model comprised of layers."""
-
-    inputs: int
-    outputs: int
-
-    def __post_init__(self):
-        self._layers: List[Layer] = [Layer(self.inputs)]
-
-    @classmethod
-    def construct_from_list(cls, layers: List[List[List[float]]]) -> Model:
-        """Constructs a new Model object by deserializing the specified layers"""
-        model = Model(inputs=0, outputs=0)
-        model.deserialize(layers)
-        return model
-
-    def serialize(self) -> List[List[List[float]]]:
-        """Serializes the model"""
-        return [layer.serialize() for layer in self._layers]
-
-    def deserialize(self, layers: List[List[List[float]]]) -> None:
-        """Deserializes the passed layers"""
-        if not layers:
-            return
-
-        self._layers = []
-        for layer_list in layers:
-            layer = Layer(length=0)
-            layer.deserialize(layer_list)
-            self._layers.append(layer)
-
-        self.inputs = len(layers[0])
-        self.outputs = len(layers[-1])
-
-        for previous_layer, layer in zip(self._layers, self._layers[1:]):
-            previous_layer.connect(layer)
-
-    def add_layer(self, length: int):
-        """Instantiates a new Layer of the specified length, connects it to the last layer
-        and appends it to the list of layers.
-        """
-        new_layer = Layer(length)
-        self._layers[-1].connect(new_layer)
-        self._layers.append(new_layer)
-
-    def build(self):
-        """Adds an output layer, then builds all layers"""
-        self.add_layer(self.outputs)  # output layer
-        for layer in self._layers:
-            layer.build()
-
-    def jumble(self, jumble_strategy: JumbleStrategy, weight_divergence: float):
-        """Jumbles all layers with the weight_divergence specified"""
-        for layer in self._layers:
-            layer.jumble(jumble_strategy, weight_divergence)
-
-    def compute(self, inputs: Iterable[int]) -> List[float]:
-        """Sets values of input layer to the specified inputs, then propagates to other layers.
-        Returns values of the output layer"""
-        input_layer = self._layers[0]
-        input_layer.set_values(inputs)
-        input_layer.propagate()
-        return self._layers[-1].values
-
-
 class Layer:
     """Neural network layer that manages nodes in that layer and interfaces with other layers."""
 
@@ -133,6 +67,73 @@ class Layer:
     def values(self) -> List[float]:
         """Getter for values, returns list of node.value of all nodes"""
         return [node.value for node in self.nodes]  # type: ignore
+
+
+@dataclass
+class Model:
+    """Neural network model comprised of layers."""
+
+    inputs: int
+    outputs: int
+    layer_class = Layer
+
+    def __post_init__(self):
+        self._layers: List[Layer] = [self.layer_class(self.inputs)]
+
+    @classmethod
+    def construct_from_list(cls, layers: List[List[List[float]]]) -> Model:
+        """Constructs a new Model object by deserializing the specified layers"""
+        model = Model(inputs=0, outputs=0)
+        model.deserialize(layers)
+        return model
+
+    def serialize(self) -> List[List[List[float]]]:
+        """Serializes the model"""
+        return [layer.serialize() for layer in self._layers]
+
+    def deserialize(self, layers: List[List[List[float]]]) -> None:
+        """Deserializes the passed layers"""
+        if not layers:
+            return
+
+        self._layers = []
+        for layer_list in layers:
+            layer = self.layer_class(length=len(layer_list))
+            layer.deserialize(layer_list)
+            self._layers.append(layer)
+
+        self.inputs = len(layers[0])
+        self.outputs = len(layers[-1])
+
+        for previous_layer, layer in zip(self._layers, self._layers[1:]):
+            previous_layer.connect(layer)
+
+    def add_layer(self, length: int):
+        """Instantiates a new Layer of the specified length, connects it to the last layer
+        and appends it to the list of layers.
+        """
+        new_layer = self.layer_class(length)
+        self._layers[-1].connect(new_layer)
+        self._layers.append(new_layer)
+
+    def build(self):
+        """Adds an output layer, then builds all layers"""
+        self.add_layer(self.outputs)  # output layer
+        for layer in self._layers:
+            layer.build()
+
+    def jumble(self, jumble_strategy: JumbleStrategy, weight_divergence: float):
+        """Jumbles all layers with the weight_divergence specified"""
+        for layer in self._layers:
+            layer.jumble(jumble_strategy, weight_divergence)
+
+    def compute(self, inputs: Iterable[int]) -> List[float]:
+        """Sets values of input layer to the specified inputs, then propagates to other layers.
+        Returns values of the output layer"""
+        input_layer = self._layers[0]
+        input_layer.set_values(inputs)
+        input_layer.propagate()
+        return self._layers[-1].values
 
 
 class Node:
