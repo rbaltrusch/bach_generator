@@ -4,7 +4,7 @@
 import logging
 import os
 import random
-from typing import List
+from typing import List, Type
 
 from bach_generator import cli, runner
 from bach_generator.src import manager, model, music_handler
@@ -52,8 +52,18 @@ def get_music_handler(args) -> music_handler.BaseMusicHandler:
     return handlers.get(args.rhythm_handler)()
 
 
+def get_layer_type(args) -> Type:
+    """Returns the layer type chosen from the cli args"""
+    layer_types = {
+        "object": model.Layer,
+        "matrix": model.MatrixLayer,
+    }
+    return layer_types.get(args.layer_type)
+
+
 def run_simulation(args):
     """Runs the simulation with the specified command line arguments"""
+    model.Model.layer_class = get_layer_type(args)
     model_managers = construct_model_managers(args)
     runner_data = runner.RunnerData(
         generations=args.generations,

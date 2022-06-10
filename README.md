@@ -51,10 +51,10 @@ Currently the node decoding happens using a simple frequency ranking analogue to
 
 Training data was downloaded from [www.jsbach.net](http://www.jsbach.net/midi/) and is not included in this repository.
 
-A pre-trained model (reaching 78% correlation for the entire Goldberg variations BWV 988, with over 90% correlation for some variations) can be found [here](models/models.json). Load and run further simulations with it by using the CLI `--load` flag:
+A pre-trained object model (reaching 78% correlation for the entire Goldberg variations BWV 988, with over 90% correlation for some variations) can be found [here](models/models.json). Load and run further simulations with it by using the CLI `--load` flag:
 
 ```
-python -m bach_generator --load=models/models.json <midi_filepath>
+python -m bach_generator --load=models/models.json --layer-type=object <midi_filepath>
 ```
 
 ## Command line interface

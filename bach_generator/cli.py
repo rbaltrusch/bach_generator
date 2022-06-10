@@ -65,6 +65,14 @@ def construct_parser() -> argparse.ArgumentParser:
     )
 
     parser.add_argument(
+        "--layer-type",
+        "-lt",
+        choices=["object", "matrix"],
+        default="matrix",
+        help="The type of layer to be used in the simulation",
+    )
+
+    parser.add_argument(
         "--layer-size",
         "-ls",
         type=int,
