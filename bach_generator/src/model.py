@@ -55,7 +55,9 @@ class MatrixLayer:
         weight_divergence: float,
     ):
         """Adds normal noise to the matrix with weight_divergence being the variance"""
-        self._matrix += numpy.random.normal(scale=weight_divergence)
+        self._matrix += numpy.random.normal(
+            scale=weight_divergence, size=self._matrix.shape
+        )
 
     def set_values(self, values: Iterable[int]):
         """Calculates the dot product of the specified values and the weight matrix"""
