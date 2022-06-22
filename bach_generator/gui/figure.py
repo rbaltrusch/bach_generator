@@ -4,15 +4,15 @@ Created on Sat Jan 30 14:41:51 2021
 
 @author: Korean_Crimson
 """
-#pylint: disable=invalid-name
-from dataclasses import dataclass
-from dataclasses import field
-from typing import Iterable
-from typing import Optional
+# pylint: disable=invalid-name
+from dataclasses import dataclass, field
+from typing import Iterable, Optional
 
 import matplotlib
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
-matplotlib.use('TkAgg')
+
+matplotlib.use("TkAgg")
+
 
 @dataclass
 class DataSet:
@@ -20,7 +20,7 @@ class DataSet:
 
     x: Optional[Iterable[float]] = None
     y: Optional[Iterable[float]] = None
-    line_colour: str = '#FFFFFF'
+    line_colour: str = "#FFFFFF"
     annotations: Iterable[str] = field(default_factory=list)
 
     def __iter__(self):
@@ -50,10 +50,11 @@ class DataSet:
         """returns tuple of min and max of passed array. defaults to (0, 1)"""
         return (0, 1) if array is None else (min(array), max(array))
 
+
 class Figure:
     """Wrapper class around matplotlib plots for tkinter (FigureCanvasTkAgg)"""
 
-    def __init__(self,  parent, bg_colour, axes_colour):
+    def __init__(self, parent, bg_colour, axes_colour):
         self.parent = parent
         self.bg_colour = bg_colour
         self.axes_colour = axes_colour
@@ -64,7 +65,7 @@ class Figure:
         rect = self.figure.patch
         rect.set_facecolor(self.bg_colour)
 
-    #pylint: disable=disallowed-name #bar
+    # pylint: disable=disallowed-name #bar
     def plot(self, *datasets, normalized=False, annotate=False, bar=False):
         """Plots the passed datasets.
         If normalized=True, the datasets are normalized first.
@@ -78,23 +79,25 @@ class Figure:
 
         for dataset in datasets:
             if bar:
-                self.axes.bar(list(range(len(dataset.y))), dataset.y, color=dataset.line_colour)
+                self.axes.bar(
+                    list(range(len(dataset.y))), dataset.y, color=dataset.line_colour
+                )
             else:
                 self.axes.plot(*dataset)
 
             self.axes.set_xlim(*dataset.x_limits)
 
             if normalized:
-                self.axes.set_yticks([x * 0.2 for x in range(7)]) #0 to 1.2
+                self.axes.set_yticks([x * 0.2 for x in range(7)])  # 0 to 1.2
             else:
                 self.axes.set_ylim(*dataset.y_limits)
 
             if annotate and dataset.annotations:
-                #adjust for center alignment of bars
+                # adjust for center alignment of bars
                 xticks = list(range(-1, len(dataset.annotations) + 1))
-                annotations = [''] + dataset.annotations + ['']
+                annotations = [""] + dataset.annotations + [""]
 
-                #set number of ticks and their labels
+                # set number of ticks and their labels
                 self.axes.set_xticks(xticks)
                 self.axes.set_xticklabels(annotations)
 
@@ -114,17 +117,19 @@ class Figure:
 
     def _colour_axes(self):
         self.axes.set_facecolor(self.bg_colour)
-        self.axes.spines['bottom'].set_color(self.axes_colour)
-        self.axes.spines['top'].set_color(self.axes_colour)
-        self.axes.spines['right'].set_color(self.axes_colour)
-        self.axes.spines['left'].set_color(self.axes_colour)
-        self.axes.tick_params(axis='x', colors=self.axes_colour, which='both')
-        self.axes.tick_params(axis='y', colors=self.axes_colour, which='both')
+        self.axes.spines["bottom"].set_color(self.axes_colour)
+        self.axes.spines["top"].set_color(self.axes_colour)
+        self.axes.spines["right"].set_color(self.axes_colour)
+        self.axes.spines["left"].set_color(self.axes_colour)
+        self.axes.tick_params(axis="x", colors=self.axes_colour, which="both")
+        self.axes.tick_params(axis="y", colors=self.axes_colour, which="both")
 
-    def set_labels(self, title='', x_title='', y_title='', title_fontsize=12, axes_fontsize=10):
+    def set_labels(
+        self, title="", x_title="", y_title="", title_fontsize=12, axes_fontsize=10
+    ):
         """Sets title and axes titles"""
-        #pylint: disable=R0913
-        self.axes.set_title (title, fontsize=title_fontsize, color=self.axes_colour)
+        # pylint: disable=R0913
+        self.axes.set_title(title, fontsize=title_fontsize, color=self.axes_colour)
         self.axes.set_ylabel(y_title, fontsize=axes_fontsize, color=self.axes_colour)
         self.axes.set_xlabel(x_title, fontsize=axes_fontsize, color=self.axes_colour)
 
