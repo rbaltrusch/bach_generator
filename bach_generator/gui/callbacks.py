@@ -107,13 +107,7 @@ def run_simulation(*_):
 
 
 def _plot_data(ratings):
-    # dataset1.annotations = annotations
-    # app["plot"]["note_fig"].tk_component.plot(
-    #     dataset1, normalized=True, annotate=True, bar=True
-    # )
-
     app["plot"]["rating_fig"].tk_component.plot(
         figure.DataSet(y=ratings, line_colour=config.SEC)
     )
-    app["plot"].activate()
     app["plot"].pack()
