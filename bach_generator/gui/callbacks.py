@@ -101,6 +101,7 @@ def run_simulation(*_):
         model_managers = runner_.run(model_managers, data=runner_data)
         ratings.append(model_managers[0].rating if model_managers else 0)
         _plot_data(ratings)
+        root.update()  # avoid window freeze
 
     logging.info("Finished running command.")
 
