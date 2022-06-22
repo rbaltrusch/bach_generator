@@ -72,7 +72,6 @@ class Figure:
         If annotate=True, each point in the datasets gets annotated with custom text
             (the annotations must previously have been stored in DataSet.annotations)
         """
-        self.axes.clear()
 
         if normalized:
             datasets = self._normalize(datasets)
