@@ -165,13 +165,15 @@ def init_config_view():
         )
     )
 
+    run_button_theme = config.BUTTON_THEME.copy()
+    run_button_theme["bg"] = config.PRIM
     view.add_component(
         components.Component(
             tk.Button(
                 frame,
                 text="Run simulation",
                 command=callbacks.run_simulation,
-                **config.BUTTON_THEME,
+                **run_button_theme,
             ),
             sticky="NSEW",
             row=len(actions) + 3,
