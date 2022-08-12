@@ -94,6 +94,9 @@ def test_copy_fail(filepaths, directory, exception):
     make_empty_files(*filepaths)
     assert all(os.path.isfile(file) for file in filepaths)
 
+    if os.path.isdir(directory):
+        shutil.rmtree(directory)
+
     output_handler_ = output_handler.OutputHandler()
     output_handler_.directory = (
         directory  # need to set manually because we arent calling setup
