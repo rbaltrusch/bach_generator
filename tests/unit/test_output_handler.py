@@ -33,7 +33,7 @@ def make_empty_files(*filepaths):
     for filepath in filepaths:
         directory = os.path.dirname(filepath)
         if directory:
-            os.makedirs(directory)
+            os.makedirs(directory, exist_ok=True)
         with open(filepath, "w"):
             pass
 
