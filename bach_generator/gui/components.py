@@ -5,7 +5,7 @@ Created on Sat Jan 30 15:08:31 2021
 @author: Korean_Crimson
 """
 
-#pylint: disable=line-too-long
+# pylint: disable=line-too-long
 
 import ctypes
 import sys
@@ -52,9 +52,10 @@ class Tk(tk.Tk):
         is recognized by windows as being grouped together with python.exe.
         See: https://stackoverflow.com/questions/1551605/how-to-set-applications-taskbar-icon-in-windows-7/1552105
         """
-        if sys.platform.startswith('win32'):
-            myappid = 'mycompany.myproduct.subproduct.version' # arbitrary string
+        if sys.platform.startswith("win32"):
+            myappid = "mycompany.myproduct.subproduct.version"  # arbitrary string
             ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID(myappid)
+
 
 class Gui:
     """Main gui class to hold references to all components, data and tk Vars used
@@ -94,7 +95,8 @@ class Gui:
             self.views_dict[key].activate()
         self.pack_all()
 
-class View():
+
+class View:
     """View class to group together conceptually related tk widgets, which then
     can be collectively shown or hidden
     """
@@ -177,13 +179,24 @@ class View():
         return {**self._components, **self._frame_components}
 
 
-#pylint: disable=R0902,R0913
-class Component():
+# pylint: disable=R0902,R0913
+class Component:
     """Wrapper class around tk widgets that holds all information required
     for grid manager, which allows adding or removing widgets from grid easily
     """
 
-    def __init__(self, tk_component, row=0, column=0, sticky='n', padx=0, pady=0, column_span=1, row_span=1, var=None):
+    def __init__(
+        self,
+        tk_component,
+        row=0,
+        column=0,
+        sticky="n",
+        padx=0,
+        pady=0,
+        column_span=1,
+        row_span=1,
+        var=None,
+    ):
         self.tk_component = tk_component
         self.row = row
         self.column = column
@@ -208,14 +221,15 @@ class Component():
     def gridpack(self):
         """places tk widget on the grid if not hidden"""
         if not self.hidden:
-            self.tk_component.grid(row=self.row,
-                                   column=self.column,
-                                   sticky=self.sticky,
-                                   padx=self.padx,
-                                   pady=self.padx,
-                                   rowspan=self.row_span,
-                                   columnspan=self.column_span
-                                   )
+            self.tk_component.grid(
+                row=self.row,
+                column=self.column,
+                sticky=self.sticky,
+                padx=self.padx,
+                pady=self.padx,
+                rowspan=self.row_span,
+                columnspan=self.column_span,
+            )
 
     def unpack(self):
         """wraps tk widget grid_forget method"""
@@ -224,6 +238,7 @@ class Component():
     def config(self, *args, **kwargs):
         """Wraps tk widget config method"""
         self.tk_component.config(*args, **kwargs)
+
 
 class Frame(Component):
     """Wrapper class around tk frame widgets that holds all information required
