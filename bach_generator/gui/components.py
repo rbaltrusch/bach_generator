@@ -8,6 +8,7 @@ Created on Sat Jan 30 15:08:31 2021
 # pylint: disable=line-too-long
 
 import ctypes
+import os
 import sys
 import tkinter as tk
 from uuid import uuid4
@@ -42,6 +43,9 @@ class Tk(tk.Tk):
 
     def set_icon(self, icon_path):
         """Sets window icon, and taskbar icon (only on Windows)"""
+        if not os.path.isfile(icon_path):
+            return
+
         photo = tk.PhotoImage(file=icon_path)
         self.iconphoto(False, photo)
         self._set_taskbar_icon()

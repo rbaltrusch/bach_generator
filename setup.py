@@ -8,7 +8,7 @@ project_dir = Path(__file__).parent
 
 setuptools.setup(
     name="bach_generator",
-    version="1.0.0",
+    version="1.0.1",
     description="Machine learning based Bach music generator",
     long_description=project_dir.joinpath("README.md").read_text(encoding="utf-8"),
     long_description_content_type="text/markdown",
@@ -16,7 +16,6 @@ setuptools.setup(
     author="Richard Baltrusch",
     url="https://github.com/rbaltrusch/bach_generator",
     packages=setuptools.find_packages("."),
-    package_dir={"": "."},
     python_requires=">=3.8",
     include_package_data=True,
     package_data={"bach_generator": ["py.typed"]},  # for mypy
