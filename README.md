@@ -26,7 +26,7 @@ Bypass the graphical user interface by calling the package and passing a midi fi
 python -m bach_generator <midi_filepath>
 ```
 
-For more CLI options, please see the [CLI documentation](#command-line-interface) or run the help command:
+For more CLI options, please see the [CLI documentation](https://github.com/rbaltrusch/bach_generator/blob/master/README#command-line-interface) or run the help command:
 
 ```
 python -m bach_generator -h
@@ -50,7 +50,7 @@ Currently the node decoding happens using a simple frequency ranking analogue to
 
 Training data was downloaded from [www.jsbach.net](http://www.jsbach.net/midi/) and is not included in this repository.
 
-A pre-trained object model (reaching 78% correlation for the entire Goldberg variations BWV 988, with over 90% correlation for some variations) can be found [here](models/models.json). Load and run further simulations with it by using the CLI `--load` flag:
+A pre-trained object model (reaching 78% correlation for the entire Goldberg variations BWV 988, with over 90% correlation for some variations) can be found [here](https://github.com/rbaltrusch/bach_generator/blob/master/models/models.json). Load and run further simulations with it by using the CLI `--load` flag:
 
 ```
 python -m bach_generator --load=models/models.json --layer-type=object <midi_filepath>
@@ -92,7 +92,7 @@ Running the package without specifying any CLI arguments with `python -m bach_ge
 
 ## Contributions
 
-To contribute, please read the [contribution guidelines](CONTRIBUTING.md).
+To contribute, please read the [contribution guidelines](https://github.com/rbaltrusch/bach_generator/blob/master/CONTRIBUTING.md).
 
 ## Python
 
