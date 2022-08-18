@@ -13,21 +13,14 @@ It's obviously not very efficient, because it is not optimized for speed and doe
 
 ## Getting started
 
-To get a copy of this repository, simply open up git bash in an empty folder and use the command:
-
-    $ git clone https://github.com/rbaltrusch/bach_generator
-
-To install all python dependencies, run the following in your command line:
-
-    python -m pip install -r requirements.txt
-
-Running the package without any arguments opens the graphical user interface instead:
+Install the package using pip, then run it with no arguments to open the graphical user interface:
 
 ```
+python -m pip install bach_generator
 python -m bach_generator
 ```
 
-Run the music generator cli by calling the package and passing a midi filepath to it:
+Bypass the graphical user interface by calling the package and passing a midi filepath to it:
 
 ```
 python -m bach_generator <midi_filepath>
