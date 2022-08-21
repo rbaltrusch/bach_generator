@@ -21,6 +21,14 @@ def construct_parser() -> argparse.ArgumentParser:
     )
 
     parser.add_argument(
+        "--parallel",
+        "-p",
+        action="store_true",
+        default=False,
+        help="Enables parallel computation using multiple CPU cores",
+    )
+
+    parser.add_argument(
         "--save",
         action="store_true",
         default=False,

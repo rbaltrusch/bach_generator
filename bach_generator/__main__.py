@@ -4,7 +4,7 @@
 import logging
 import os
 import random
-from typing import List, Type
+from typing import Callable, List, Type
 
 from bach_generator import cli, runner
 from bach_generator.gui import app, init
@@ -62,6 +62,13 @@ def get_layer_type(args) -> Type:
     return layer_types.get(args.layer_type)
 
 
+def get_run_function(args) -> Callable:
+    """Returns the run function chosen from cli args"""
+    if args.parallel:
+        return runner.run_models_in_parallel
+    return runner.run_models
+
+
 def setup_simulation(args):
     """Sets up the simulation using the cli args"""
     random.seed(args.seed)
@@ -76,7 +83,9 @@ def setup_simulation(args):
         weight_jumble_strategy=get_weight_jumble_strategy(args),
     )
 
-    runner_ = runner.GeneticAlgorithmRunner(music_handler=get_music_handler(args))
+    runner_ = runner.GeneticAlgorithmRunner(
+        music_handler=get_music_handler(args), run_function=get_run_function(args)
+    )
     runner_.setup(input_file=args.filepath, output_directory=args.output_dir)
     return runner_, runner_data, model_managers
 
