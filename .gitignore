@@ -5,6 +5,7 @@ tests/reports/
 .pylint.d/
 .vscode/
 command.bat
+**/desktop.ini
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
