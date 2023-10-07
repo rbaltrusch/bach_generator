@@ -39,6 +39,7 @@ setuptools.setup(
         "Programming Language :: Python :: 3.8",
         "Programming Language :: Python :: 3.9",
         "Programming Language :: Python :: 3.10",
+        "Topic :: Artistic Software",
         "Topic :: Desktop Environment",
         "Topic :: Multimedia",
         "Topic :: Multimedia :: Sound/Audio",
