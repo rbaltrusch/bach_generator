@@ -5,7 +5,7 @@ from __future__ import annotations
 
 import logging
 import time
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from functools import partial
 from multiprocessing import Pool
 from typing import Callable, List
@@ -84,11 +84,11 @@ class GeneticAlgorithmRunner:
     through an input file over a number of generations.
     """
 
-    judge: Judge = Judge()
-    output_handler: OutputHandler = OutputHandler()
-    music_handler: CopyMusicHandler = CopyMusicHandler()
-    encoder: Encoder = Encoder()
-    quantizer: Quantizer = Quantizer()
+    judge: Judge = field(default_factory=Judge)
+    output_handler: OutputHandler = field(default_factory=OutputHandler)
+    music_handler: CopyMusicHandler = field(default_factory=CopyMusicHandler)
+    encoder: Encoder = field(default_factory=Encoder)
+    quantizer: Quantizer = field(default_factory=Quantizer)
     run_function: Callable[
         [GeneticAlgorithmRunner, List[ModelManager]], List[ModelManager]
     ] = run_models
