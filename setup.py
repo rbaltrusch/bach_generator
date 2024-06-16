@@ -8,7 +8,7 @@ project_dir = Path(__file__).parent
 
 setuptools.setup(
     name="bach_generator",
-    version="1.0.2",
+    version="1.1.0",
     description="Machine learning based Bach music generator",
     long_description=project_dir.joinpath("README.md").read_text(encoding="utf-8"),
     long_description_content_type="text/markdown",
