@@ -8,7 +8,6 @@ import sys
 from typing import Callable, List, Type
 
 from bach_generator import cli, runner
-from bach_generator.gui import app, init
 from bach_generator.src import manager, model, music_handler
 
 
@@ -106,7 +105,7 @@ def run_simulation(args):
         logging.info("Saved models to file")
 
 
-def run_gui():
+def run_gui(app, init):
     """Runs the graphical interface"""
     init.init()
     app.data["setup_function"] = setup_simulation
@@ -121,20 +120,35 @@ def run_gui():
 
 
 class StreamHandler(logging.StreamHandler):
+    """Logging stream handler for gui mode"""
+
+    def __init__(self, gui_app):
+        super().__init__()
+        self.app = gui_app
+
     def emit(self, record: logging.LogRecord) -> None:
-        if not app.destroyed:
-            app.data["message"].set("Status: " + record.getMessage())
+        if not self.app.destroyed:
+            self.app.data["message"].set("Status: " + record.getMessage())
         super().emit(record)
 
 
 def main():
     """Main function"""
+    gui_mode = len(sys.argv) == 1
+    if gui_mode:
+        from bach_generator.gui import (  # pylint: disable=import-outside-toplevel
+            app,
+            init,
+        )
+
     logging.basicConfig(
-        level=logging.INFO, format="%(asctime)s %(message)s", handlers=[StreamHandler()]
+        level=logging.INFO,
+        format="%(asctime)s %(message)s",
+        handlers=[StreamHandler(app if gui_mode else None)],
     )
     parser = cli.construct_parser()
-    if len(sys.argv) == 1:
-        run_gui()
+    if gui_mode:
+        run_gui(app, init)
         return
     args = parser.parse_args()
     cli.display_args(args)
