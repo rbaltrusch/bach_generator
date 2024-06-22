@@ -46,7 +46,11 @@ def get_cli_command() -> str:
     ]
     if actions:
         command += " " + " ".join(
-            f"{action.option_strings[0]} {app.data[action.dest].get()}"
+            (
+                f"{action.option_strings[0]} {app.data[action.dest].get()}"
+                if not isinstance(app.data[action.dest].get(), bool)
+                else str(action.option_strings[0])
+            )
             for action in actions
         )
     return command.replace("  ", " ")
