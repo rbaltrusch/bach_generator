@@ -97,17 +97,18 @@ def run_simulation(*_):
     runner_data.generations = 1
 
     ratings = []
+    colour = app.data["colour_picker"].colour
     for _ in range(generations):
         model_managers = runner_.run(model_managers, data=runner_data)
         ratings.append(model_managers[0].rating if model_managers else 0)
-        _plot_data(ratings)
+        _plot_data(ratings, colour)
         root.update()  # avoid window freeze
 
     logging.info("Finished running command.")
 
 
-def _plot_data(ratings):
+def _plot_data(ratings, colour: str):
     app["plot"]["rating_fig"].tk_component.plot(
-        figure.DataSet(y=ratings, line_colour=config.SEC)
+        figure.DataSet(y=ratings, line_colour=colour)
     )
     app["plot"].pack()
