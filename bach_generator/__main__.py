@@ -117,14 +117,13 @@ def main():
     """Main function"""
     logging.basicConfig(level=logging.INFO, format="%(asctime)s %(message)s")
     parser = cli.construct_parser()
-    try:
-        args = parser.parse_args()
-    except SystemExit:
+    if len(sys.argv) == 1:
         run_gui()
         return
-
+    args = parser.parse_args()
     cli.display_args(args)
     run_simulation(args)
 
 
-main()
+if __name__ == "__main__":
+    main()
