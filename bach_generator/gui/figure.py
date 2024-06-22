@@ -51,7 +51,7 @@ class DataSet:
     @staticmethod
     def _get_limits(array):
         """returns tuple of min and max of passed array. defaults to (0, 1)"""
-        return (0, 1) if array is None else (min(array), max(array))
+        return (0, 1) if array is None else (min(array), max(array) * 1.1)
 
 
 class Figure:
@@ -67,9 +67,10 @@ class Figure:
         self.tk_widget = self.canvas.get_tk_widget()
         rect = self.figure.patch
         rect.set_facecolor(self.bg_colour)
+        self._y_lim = 0
 
     # pylint: disable=disallowed-name #bar
-    def plot(self, *datasets, normalized=False, annotate=False, bar=False):
+    def plot(self, *datasets: DataSet, normalized=False, annotate=False, bar=False):
         """Plots the passed datasets.
         If normalized=True, the datasets are normalized first.
         If annotate=True, each point in the datasets gets annotated with custom text
@@ -85,14 +86,16 @@ class Figure:
                     list(range(len(dataset.y))), dataset.y, color=dataset.line_colour
                 )
             else:
-                self.axes.plot(*dataset)
+                self.axes.plot(*dataset, color=dataset.line_colour)
 
             self.axes.set_xlim(*dataset.x_limits)
 
             if normalized:
                 self.axes.set_yticks([x * 0.2 for x in range(7)])  # 0 to 1.2
             else:
-                self.axes.set_ylim(*dataset.y_limits)
+                # remember y lims from previous plots
+                self._y_lim = max(self._y_lim, dataset.y_limits[1])
+                self.axes.set_ylim(0, self._y_lim)
 
             if annotate and dataset.annotations:
                 # adjust for center alignment of bars
