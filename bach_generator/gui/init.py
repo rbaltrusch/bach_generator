@@ -35,7 +35,7 @@ def init_root():
 
     # set trace callbacks
     root.bind_all("<Button-1>", callbacks.focus)
-    app.data["error"].trace_add("write", callbacks.set_error)
+    app.data["message"].trace_add("write", callbacks.set_message)
 
     # set window icon
     icon_path = os.path.join(os.path.dirname(__file__), "media", "icon.png")
@@ -205,7 +205,7 @@ def init_config_view():
         components.Component(
             tk.Entry(
                 frame,
-                textvariable=app.data["error"],
+                textvariable=app.data["message"],
                 state="disabled",
                 disabledbackground=config.BG,
                 bg=config.BG,

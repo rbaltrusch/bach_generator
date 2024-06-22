@@ -130,7 +130,7 @@ class GeneticAlgorithmRunner:
 
             best_manager = model_managers[0]
             logging.info(
-                "Generation %s (steptime=%s). Amount of models: %s. Best manager rating: %s%%",
+                "Generation %i (steptime=%s). Amount of models: %s. Best manager rating: %s%%",
                 i,
                 round(time.time() - start_time, 2),
                 len(model_managers),
