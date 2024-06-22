@@ -10,6 +10,7 @@ from dataclasses import dataclass, field
 from typing import Iterable, Optional
 
 import matplotlib
+import matplotlib.pyplot as plt
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 
 warnings.filterwarnings("ignore")
@@ -60,7 +61,7 @@ class Figure:
         self.parent = parent
         self.bg_colour = bg_colour
         self.axes_colour = axes_colour
-        self.figure = matplotlib.figure.Figure()
+        self.figure = plt.figure()
         self.axes = self.figure.add_subplot(111)
         self.canvas = FigureCanvasTkAgg(self.figure, master=self.parent)
         self.tk_widget = self.canvas.get_tk_widget()
