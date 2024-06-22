@@ -58,6 +58,8 @@ def get_cli_command() -> str:
 
 def set_command_text(*_):
     """Sets the command text entry to the current command"""
+    if not app["config"]:
+        return
     widget = app["config"]["command_text"].tk_component
     widget.delete("1.0", "end")
     widget.insert("1.0", get_cli_command())

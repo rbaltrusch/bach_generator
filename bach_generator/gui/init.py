@@ -12,6 +12,11 @@ import tkinter as tk
 from bach_generator.gui import app, args, callbacks, components, config, figure, root
 
 
+def on_quit():
+    """Destroys the window"""
+    root.destroy()
+
+
 def init():
     """Initializes root and all views of gui app"""
     init_root()
@@ -25,6 +30,7 @@ def init():
 def init_root():
     """Initialize tkinter root"""
     # configure root
+    root.protocol("WM_DELETE_WINDOW", on_quit)
     root.title(config.TITLE)
     root["bg"] = config.BG
     root.option_add("*TCombobox*Listbox*Background", config.BG2)
@@ -73,7 +79,7 @@ def init_config_view():
         if not any(y in x.dest for y in ["filepath", "load"])
     ]
 
-    view = components.View()
+    view = components.View(app)
     view.activate()
 
     frame = tk.Frame(root, bd=0, bg=config.BG)
@@ -224,7 +230,7 @@ def init_config_view():
 
 def init_plot_view():
     """Initializes results and plots view"""
-    view = components.View()
+    view = components.View(app)
     view.activate()
 
     frame = tk.Frame(root, bd=0, bg=config.BG)

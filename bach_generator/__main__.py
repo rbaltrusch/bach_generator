@@ -111,7 +111,13 @@ def run_gui():
     init.init()
     app.data["setup_function"] = setup_simulation
     app.pack_all()
-    app.mainloop()
+
+    try:
+        app.mainloop()
+    except Exception as exc:
+        if app.destroyed:
+            return
+        raise exc
 
 
 class StreamHandler(logging.StreamHandler):
