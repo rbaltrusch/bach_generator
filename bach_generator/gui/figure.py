@@ -5,12 +5,14 @@ Created on Sat Jan 30 14:41:51 2021
 @author: Korean_Crimson
 """
 # pylint: disable=invalid-name
+import warnings
 from dataclasses import dataclass, field
 from typing import Iterable, Optional
 
 import matplotlib
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 
+warnings.filterwarnings("ignore")
 matplotlib.use("TkAgg")
 
 
