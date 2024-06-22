@@ -13,9 +13,15 @@ def set_gui_config_defaults(*_):
     """Sets the gui configuration default values"""
 
 
-def set_error(*_):
-    """Callback for error StringVar write trace"""
-    background = config.ERR if app.data["error"].get() else config.BG2
+def set_message(*_):
+    """Callback for message StringVar write trace"""
+    if not app["config"]:
+        return
+
+    message = app.data["message"].get()
+    background = (
+        config.ERR if message and not message.startswith("Status") else config.BG2
+    )
     app["config"]["file_button"].config(bg=background)
 
 
@@ -26,7 +32,7 @@ def choose_file():
     )
     if filepath:
         app.data["filepath"].set(filepath)
-        app.data["error"].set("")
+        app.data["message"].set("")
 
 
 def get_cli_command() -> str:
@@ -58,6 +64,7 @@ def copy_cli_command(*_):
     root.clipboard_clear()
     command = get_cli_command()
     root.clipboard_append(command)
+    logging.info("Status: copied command.")
 
 
 def focus(event):
@@ -68,7 +75,7 @@ def focus(event):
 def _set_filepath_error():
     error_message = "An input MIDI file must be selected to run the simulation!"
     logging.error(error_message)
-    app.data["error"].set(error_message)
+    app.data["message"].set(error_message)
 
 
 def run_simulation(*_):

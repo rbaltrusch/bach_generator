@@ -4,6 +4,7 @@
 import logging
 import os
 import random
+import sys
 from typing import Callable, List, Type
 
 from bach_generator import cli, runner
@@ -113,9 +114,18 @@ def run_gui():
     app.mainloop()
 
 
+class StreamHandler(logging.StreamHandler):
+    def emit(self, record: logging.LogRecord) -> None:
+        if not app.destroyed:
+            app.data["message"].set("Status: " + record.getMessage())
+        super().emit(record)
+
+
 def main():
     """Main function"""
-    logging.basicConfig(level=logging.INFO, format="%(asctime)s %(message)s")
+    logging.basicConfig(
+        level=logging.INFO, format="%(asctime)s %(message)s", handlers=[StreamHandler()]
+    )
     parser = cli.construct_parser()
     if len(sys.argv) == 1:
         run_gui()
