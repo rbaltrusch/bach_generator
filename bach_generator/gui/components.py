@@ -21,6 +21,7 @@ class Tk(tk.Tk):
         super().__init__()
         self.col_num = 0
         self.row_num = 0
+        self.destroyed = False
 
     def add_row(self, minsize, weight=1):
         """Extends rowconfigure with handy defaults"""
@@ -50,6 +51,19 @@ class Tk(tk.Tk):
         self.iconphoto(False, photo)
         self._set_taskbar_icon()
 
+    def destroy(self):
+        """Destroys app, then sets self.destroyed to True"""
+        self.destroyed = True
+        super().destroy()
+        super().quit()
+
+    def update(self):
+        """Updates the window"""
+        if self.destroyed:
+            super().quit()
+            sys.exit()
+        super().update()
+
     @staticmethod
     def _set_taskbar_icon():
         """Required to set taskbar icon for windows, otherwise the tkinter window
@@ -66,14 +80,14 @@ class Gui:
     in the gui
     """
 
-    def __init__(self, window):
+    def __init__(self, window: Tk):
         self.window = window
         self.views_dict = {}
         self.data = {}
         self.focused_widget_name = None
 
     def __getitem__(self, view_name):
-        return self.views_dict[view_name]
+        return self.views_dict.get(view_name)
 
     def mainloop(self):
         """Calls tk.root.mainloop"""
@@ -99,16 +113,22 @@ class Gui:
             self.views_dict[key].activate()
         self.pack_all()
 
+    @property
+    def destroyed(self) -> bool:
+        """Destroyed status of window"""
+        return self.window.destroyed
+
 
 class View:
     """View class to group together conceptually related tk widgets, which then
     can be collectively shown or hidden
     """
 
-    def __init__(self):
+    def __init__(self, app: Gui):
         self.active = False
         self._components = {}
         self._frame_components = {}
+        self._app = app
 
     def __getitem__(self, component_name):
         return self._all_components[component_name]
@@ -155,6 +175,9 @@ class View:
 
     def pack(self):
         """calls gridpack for all components in the view"""
+        if self._app.destroyed:
+            return
+
         for component in self._all_components.values():
             component.gridpack()
 
