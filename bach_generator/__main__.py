@@ -127,7 +127,7 @@ class StreamHandler(logging.StreamHandler):
         self.app = gui_app
 
     def emit(self, record: logging.LogRecord) -> None:
-        if not self.app.destroyed:
+        if self.app and not self.app.destroyed:
             self.app.data["message"].set("Status: " + record.getMessage())
         super().emit(record)
 
@@ -135,6 +135,7 @@ class StreamHandler(logging.StreamHandler):
 def main():
     """Main function"""
     gui_mode = len(sys.argv) == 1
+    app = None
     if gui_mode:
         from bach_generator.gui import (  # pylint: disable=import-outside-toplevel
             app,
@@ -144,7 +145,7 @@ def main():
     logging.basicConfig(
         level=logging.INFO,
         format="%(asctime)s %(message)s",
-        handlers=[StreamHandler(app if gui_mode else None)],
+        handlers=[StreamHandler(app)],
     )
     parser = cli.construct_parser()
     if gui_mode:
