@@ -107,12 +107,14 @@ def run_simulation(*_):
     function = app.data["setup_function"]
     runner_, runner_data, model_managers = function(args_)
     generations = runner_data.generations
-    runner_data.generations = 1
 
     ratings = []
     colour = app.data["colour_picker"].colour
-    for _ in range(generations):
-        model_managers = runner_.run(model_managers, data=runner_data)
+    for i in range(generations):
+        runner_data.generations = i + 1
+        model_managers = runner_.run(
+            model_managers, data=runner_data, start_generation=i + 1
+        )
         ratings.append(model_managers[0].rating if model_managers else 0)
         _plot_data(ratings, colour)
         root.update()  # avoid window freeze

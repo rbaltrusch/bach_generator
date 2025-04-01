@@ -111,7 +111,10 @@ class GeneticAlgorithmRunner:
         self.quantizer.setup(self.encoded_inputs)
 
     def run(
-        self, model_managers: List[ModelManager], data: RunnerData
+        self,
+        model_managers: List[ModelManager],
+        data: RunnerData,
+        start_generation: int = 1,
     ) -> List[ModelManager]:
         """Runs a genetic algorithm with the models using the input RunnerData.
         Returns a sorted list of evolved models once finished.
@@ -119,7 +122,7 @@ class GeneticAlgorithmRunner:
         if not model_managers:
             return []
 
-        for i in range(1, data.generations + 1):
+        for i in range(start_generation, data.generations + 1):
             start_time = time.time()
 
             model_managers = self.run_function(self, model_managers)
