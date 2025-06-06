@@ -22,11 +22,12 @@ jobs:
       - name: Install dependencies
         run: |
           conda install pip
+          sudo apt-get update
+          sudo apt-get install libopenblas-dev # scipy
           pip install -e .
       - name: Test with pytest
         working-directory: tests
         run: |
-          sudo apt-get update
-          sudo apt-get install libopenblas-dev # scipy
+          conda install -c conda-forge gcc=12.1.0 # run-time requirement by scipy: GLIBCXX_3.4.30, see similar issue https://github.com/rstudio/reticulate/issues/1282
           pip install -r requirements.txt
           pytest .
