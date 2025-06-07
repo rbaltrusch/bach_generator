@@ -32,7 +32,7 @@ jobs:
 
           # fixes twine upload problem
           # see https://github.com/pypi/warehouse/issues/15611
-          echo pkginfo^>1.10 > build_reqs.txt
+          echo "pkginfo>1.10" > build_reqs.txt
           pip install -r build_reqs.txt
 
           pip install build
